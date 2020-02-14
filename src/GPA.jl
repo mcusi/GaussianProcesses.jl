@@ -347,6 +347,30 @@ function sample_params(gp::GPA; lik::Bool=true, domean::Bool=true, kern::Bool=tr
     return samples
 end
 
+function sample_params(rng::AbstractRNG, gp::GPA; lik::Bool=true, domean::Bool=true, kern::Bool=true)
+    samples = Float64[]
+    if lik && num_params(gp.lik)>0
+        like_priors = get_priors(gp.lik)
+        @assert !isempty(like_priors) "prior distributions of likelihood hyperparameters should be set"
+        like_sample = rand(rng, Product(like_priors))
+        append!(samples, like_sample)
+    end
+    if domean && num_params(gp.mean)>0
+        mean_priors = get_priors(gp.mean)
+        @assert !isempty(mean_priors) "prior distributions of mean hyperparameters should be set"
+        mean_sample = rand(rng, Product(mean_priors))
+        append!(samples, mean_sample)
+    end
+    if kern && num_params(gp.kernel)>0
+        kernel_priors = get_priors(gp.kernel)
+        @assert !isempty(kernel_priors) "prior distributions of kernel hyperparameters should be set"
+        kernel_sample = rand(rng, Product(kernel_priors))
+        append!(samples, kernel_sample)
+    end
+    return samples
+end
+
+
 function get_params(gp::GPA; lik::Bool=true, domean::Bool=true, kern::Bool=true)
     params = Float64[]
     append!(params, gp.v)

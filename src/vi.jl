@@ -100,6 +100,21 @@ Random.rand(gp::GPBase, x::AbstractMatrix, n::Int, Q::Approx) = rand!(gp, x, Arr
 Random.rand(gp::GPBase, x::AbstractVector, Q::Approx) = vec(rand(gp, x', 1, Q))
 Random.rand(gp::GPBase, x::AbstractMatrix, Q::Approx) = vec(rand(gp, x, 1, Q))
 
+#Sample from variational GP with local random number generator
+function Random.rand!(rng::AbstractRNG, gp::GPBase, x::AbstractMatrix, A::DenseMatrix, Q::Approx)
+    nobs = size(x, 2)
+    n_sample = size(A, 2)
+    μ, Σraw = predict_f(gp, x, Q)
+    Σraw, chol = make_posdef!(Σraw)
+    Σ = PDMat(Σraw, chol)
+    return broadcast!(+, A, μ, unwhiten!(Σ,randn(rng, nobs, n_sample)))
+end
+
+# Generate samples from the variational approxiamtion
+Random.rand(rng::AbstractRNG, gp::GPBase, x::AbstractMatrix, n::Int, Q::Approx) = rand!(rng, gp, x, Array{Float64}(undef, size(x, 2), n), Q)
+Random.rand(rng::AbstractRNG, gp::GPBase, x::AbstractVector, Q::Approx) = vec(rand(rng, gp, x', 1, Q))
+Random.rand(rng::AbstractRNG, gp::GPBase, x::AbstractMatrix, Q::Approx) = vec(rand(rng, gp, x, 1, Q))
+
 predict_full(gp::GPA, xpred::AbstractMatrix, Q::Approx) = predictMVN(gp,xpred, gp.x, gp.y, gp.kernel, gp.mean, gp.v, gp.covstrat, Q)
 
 """
