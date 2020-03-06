@@ -322,9 +322,11 @@ function ess(rng::AbstractRNG, gp::GPE; nIter::Int=1000, burn::Int=1, thin::Int=
 
     post = post[burn:thin:end,:]
     set_params!(gp, θ_cur; params_kwargs...)
+    #=
     @printf("Number of iterations = %d, Thinning = %d, Burn-in = %d \n", nIter,thin,burn)
     println("Number of function calls: ", count)
     @printf("Acceptance rate: %f \n", nIter / total_proposals)
+    =#
     return post'
 end
 
