@@ -89,3 +89,4 @@ end
 # priors
 get_priors(masked::Masked) = get_priors(masked.kernel)
 set_priors!(masked::Masked, priors) = set_priors!(masked.kernel, priors)
+set_priors!(masked::Masked, priors::Array) = set_priors!(masked.kernel, priors)
