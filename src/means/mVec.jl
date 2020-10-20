@@ -52,6 +52,8 @@ end
 function grad_mean(mVec::MeanVec, x::AbstractVector)
     println("Grad_mean x: ", x)
     println("Grad_mean mVec: ", mVec)
-    dM_theta = ones(length(mVec.β))
+    idx = findfirst(isequal(x[2]),mVec.x0)]
+    dM_theta = zeros(length(mVec.β))
+    dM_theta[idx] = 1.0
     return dM_theta
 end
