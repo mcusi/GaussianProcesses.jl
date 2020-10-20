@@ -38,8 +38,8 @@ get_params(mVec::MeanVec) = mVec.β
 get_param_names(::MeanVec) = [:β]
 num_params(mVec::MeanVec) = length(mVec.β)
 function set_params!(mVec::MeanVec, hyp::AbstractVector)
-    length(hyp) == 1 || throw(ArgumentError("Constant vector mean function has 1 parameter."))
-    mVec.β = hyp[1]
+    length(hyp) == length(mVec.β) || throw(ArgumentError("ConstVec mean function only has $(mVec.dim) parameters"))
+    copyto!(mVec.β, hyp)
 end
 function grad_mean(mVec::MeanVec, x::AbstractVector)
     dM_theta = ones(length(x))
