@@ -30,3 +30,4 @@ include("mLin.jl")           # Linear mean function
 include("mPoly.jl")          # Polynomial mean function
 include("composite_mean.jl") # Composite means
 include("mPeriodic.jl")
+include("mVec.jl")
