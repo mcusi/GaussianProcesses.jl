@@ -27,14 +27,11 @@ end
 
 mean(mVec::MeanVec, x::AbstractVector) = mVec.β[ [findfirst(isequal(_x[2]),mVec.x0) for _x in x] ]
 function mean(mVec::MeanVec, X::AbstractMatrix)
-    println("meanfunc")
-    println(size(X,2))
     mean_vector = zeros(size(X,2))
     for i in 1:size(X,2)
         println(mVec.β[findfirst(isequal(X[2,i]),mVec.x0)])
         mean_vector[i] = mVec.β[findfirst(isequal(X[2,i]),mVec.x0)]
     end
-    println("mean_vector: ", mean_vector)
     return mean_vector
 end
 
@@ -42,16 +39,11 @@ get_params(mVec::MeanVec) = mVec.β
 get_param_names(::MeanVec) = [:β]
 num_params(mVec::MeanVec) = length(mVec.β)
 function set_params!(mVec::MeanVec, hyp::AbstractVector)
-    println("set_params")
-    println(hyp)
-    println(mVec.β)
     length(hyp) == length(mVec.β) || throw(ArgumentError("ConstVec mean function only has $(mVec.dim) parameters"))
     copyto!(mVec.β, hyp)
     copyto!(mVec.x0, mVec.x0)
 end
 function grad_mean(mVec::MeanVec, x::AbstractVector)
-    println("Grad_mean x: ", x)
-    println("Grad_mean mVec: ", mVec)
     idx = findfirst(isequal(x[2]),mVec.x0)
     dM_theta = zeros(length(mVec.β))
     dM_theta[idx] = 1.0
