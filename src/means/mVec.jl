@@ -29,7 +29,6 @@ mean(mVec::MeanVec, x::AbstractVector) = mVec.β[ [findfirst(isequal(_x[2]),mVec
 function mean(mVec::MeanVec, X::AbstractMatrix)
     mean_vector = zeros(size(X,2))
     for i in 1:size(X,2)
-        println(mVec.β[findfirst(isequal(X[2,i]),mVec.x0)])
         mean_vector[i] = mVec.β[findfirst(isequal(X[2,i]),mVec.x0)]
     end
     return mean_vector
